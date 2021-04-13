@@ -11,7 +11,7 @@ module.exports = class ServerManager {
 	}
 
 	setConfiguration(configObject) {
-
+		
 	}
 
 
