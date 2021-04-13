@@ -4,6 +4,25 @@ module.exports = class PermissionManager {
 
 
     /*
+        constructor(permissionObject)
+
+        Params:
+            permissionObject: object of all permissions
+
+        Returns:
+            none
+
+        Remarks:
+            If permissionObject is not supplied, everyone strarts with no permissions
+    */
+    constructor(permissionObject) {
+
+        if(permissionObject !== undefined)
+            this.#serverPermissions = permissionObject;
+    }
+
+
+    /*
         getPermissions(userID)
 
         Params:
