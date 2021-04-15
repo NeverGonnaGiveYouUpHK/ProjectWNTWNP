@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const fs = require('fs/promises');
 
 const priorityColors = ['#ee0000', '#fcac34', '#1cef5b'];
 
@@ -151,7 +152,28 @@ module.exports = class ReminderManager { //anonymously manages reminders, attach
 		this.notifications.splice(index, 1);
 	}
 
-	save(){
+	toConfig(){
+		//returns the saveable config
+		//if you want to save the config to file, use save(path) instead
 
+		return JSON.stringify(this.notifications);
+	}
+	
+	cleanUp(){
+		//deletes all already sent reminders
+
+		for (var i = 0; i < this.notifications.length; i++){
+			if (!this.notifications[i].wasSent){
+				this.notifications.splice(0, i);
+				break;
+			}
+		}
+	}
+
+	async save(path){
+		//asynchronously create config and save to a file according to the specified path
+
+		this.cleanUp();
+		await fs.writeFile(path, this.toConfig());
 	}
 }
