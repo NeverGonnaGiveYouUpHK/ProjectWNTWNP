@@ -36,7 +36,7 @@ module.exports = class PermissionManager {
         var userPermissions = this.#serverPermissions[userID];
 
         if (userPermissions === undefined) 
-            this.setPermission(userID, 'NONE');    
+            this.setPermission(userID, null);    
 
         return {
             'success': true,
@@ -134,6 +134,11 @@ module.exports = class PermissionManager {
             this.setPermission(userID, null);
 
         userPermissions[permission] = true;
+
+        return {
+            'success': true,
+            'result': null
+        };
     }
     
 
@@ -202,7 +207,7 @@ module.exports = class PermissionManager {
 
     /* Permissions
     *
-    * ADMIN:                every permission below
+    * ADMIN:                Manage Privileges
     * MANAGE_TEAM:          create and manage teams
     * 
     * Add More
