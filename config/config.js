@@ -1,37 +1,24 @@
 const fs = require('fs/promises');
-const Permissions = require('../server/permissionManager');
 
-class Config {
-	id = null;
-	users = Object.create(null);
-	permissionManager = null;
+const ReminderManager = require('../server/reminder');
 
+module.exports.User = class User {
+	id = "";
+	reminders;
 	
-	constructor(from){
-		if (typeof from === "object"){
-			this.id = from.id;
-			this.users = from.users;
-			this.permissionManager = new Permissions(from.permissions);
-		}
+	constructor(userID){
+		this.id = userID;
 	}
 
+	async initialize(){
+		try {
+			const config = await fs.readFile(`./data/reminders/${this.id}.json`);
+			const configParsed = JSON.parse(config);
 
-}
-module.exports.Config = Config;
-
-module.exports.loadServer = async function loadServer(guild){
-	try {
-		var contents = await fs.readFile(`./data/${guild.id}.json`, {encoding: 'utf-8'});
-		contents = JSON.parse(contents);
-
-		const config = new Config(contents);
-
-		guild.config = config;
-	} catch (error){
-		return {
-			success: false,
-			error: error,
-			config: null
-		};
+			this.reminders = new ReminderManager(configParsed);
+		} catch (error){
+			this.reminders = new ReminderManager();
+		}
+		
 	}
 }

@@ -102,7 +102,7 @@ module.exports = class ReminderManager { //anonymously manages reminders, attach
 		return result;
 	}
 
-	addReminder(when, text, priority){
+	add(when, text, priority){
 		//when: number
 		//text: string
 		//priority: number
@@ -136,7 +136,7 @@ module.exports = class ReminderManager { //anonymously manages reminders, attach
 		this.notifications.splice(index, 0, new Reminder(when, text, priority));
 	}
 
-	removeReminder(inputIndex){
+	remove(inputIndex){
 		//inputIndex: number (must be found in notifications array)
 
 		//removes a reminder with a base-1 index
@@ -145,7 +145,7 @@ module.exports = class ReminderManager { //anonymously manages reminders, attach
 
 		//throw error if such index has no reminder
 		if (this.notifications.length <= index || index < 0){
-			throw new Error('Reminder with such index does not exist');
+			throw new RangeError('Reminder with such index does not exist');
 		}
 
 		//execute the removal
