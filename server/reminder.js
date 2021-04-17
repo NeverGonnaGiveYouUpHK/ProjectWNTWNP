@@ -40,36 +40,38 @@ class Reminder {
 		return new Schedule(this, this.when - Date.now());
 	}
 	
-	send(){
-		//creates a sendable Embed from the Reminder object
-		this.wasSent = true;
-
+	toMessage(){
 		return new Discord.MessageEmbed()
 		.addField('Reminder', this.text)
 		.setColor(priorityColors[this.priorityColors]);
 	}
+
+	send(){
+		//creates a sendable Embed from the Reminder object
+		this.wasSent = true;
+
+		return this.toMessage();
+	}
 }
+
+const defaults = [];
 
 module.exports = class ReminderManager { //anonymously manages reminders, attach to a user or save ID with it if needed
 	notifications = []; //array that holds all reminders
 
-	constructor(config){				
+	constructor(config = defaults){				
 		//config?: object[]
 
 		//may take an array from config or nothing - then notifications will be an empty array
 
-		if (Array.isArray(config)){
-			for (const reminder of config){
-				this.notifications.push(
-					new Reminder(
-						reminder.when,
-						reminder.text,
-						reminder.priority
-					)
-				);
-			}
-
-			this.notifications = config;
+		for (const reminder of config){
+			this.notifications.push(
+				new Reminder(
+					reminder.when,
+					reminder.text,
+					reminder.priority
+				)
+			);
 		}
 	}
 
@@ -133,7 +135,12 @@ module.exports = class ReminderManager { //anonymously manages reminders, attach
 		}
 
 		//inserts the new Reminder to notifications array
-		this.notifications.splice(index, 0, new Reminder(when, text, priority));
+		const newReminder = new Reminder(when, text, priority);
+		this.notifications.splice(index, 0, newReminder);
+
+		console.log(this.notifications);
+
+		return newReminder;
 	}
 
 	remove(inputIndex){

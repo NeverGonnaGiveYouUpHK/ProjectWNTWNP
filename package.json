@@ -18,7 +18,8 @@
   "homepage": "https://github.com/NeverGonnaGiveYouUpHK/ProjectWNTWNP#readme",
   "dependencies": {
     "discord.js": "^12.5.3",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "nodejs-scanf": "^1.1.0"
   },
   "devDependencies": {
     "eslint": "^7.24.0",

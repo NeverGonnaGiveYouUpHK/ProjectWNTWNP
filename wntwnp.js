@@ -24,10 +24,9 @@ bot.on('ready', () => {
 
 		switch (command){
 			case 'reminder':
+				reminderHandle(msg, args)
+				break;
 
-			
-
-				
 			default:
 				break;
 		}
