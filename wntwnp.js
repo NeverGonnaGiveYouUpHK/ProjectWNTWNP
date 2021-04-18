@@ -10,6 +10,7 @@ const prefix = "!";
 global.users = new Map();
 
 const reminderHandle = require('./handles/reminderHandle');
+const help = require('./help');
 
 bot.on('ready', () => {
 	bot.on('message', async (msg) => {
@@ -24,7 +25,11 @@ bot.on('ready', () => {
 
 		switch (command){
 			case 'reminder':
-				reminderHandle(msg, args)
+				reminderHandle(msg, args);
+				break;
+
+			case 'help':
+				msg.channel.send(help());
 				break;
 
 			default:
