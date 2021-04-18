@@ -9,16 +9,23 @@ global.bot.login(process.env.TOKEN);
 
 global.users = new Map();
 
+<<<<<<< HEAD
 const users = global.users;
 const bot = global.bot;
 
 
 const prefix = "!";
+=======
+const PermissionManager = require('./server/permissionManager');
+const permissionAPI = require('./api/permission')
+>>>>>>> 2bcb9b03ad679659cb6a16059f497f8c4e6c17da
 
 const reminderHandle = require('./handles/reminderHandle');
 const timezoneHandle = require('./handles/timezoneHandle');
 
 const help = require('./help');
+
+const permissionTesInstance = new PermissionManager();
 
 bot.on('ready', () => {
 	bot.on('message', async (msg) => {
@@ -26,6 +33,7 @@ bot.on('ready', () => {
 		
 		const split = msg.content.split(' ');
 
+		
 		const commandWithPrefix = split[0];
 		const command = commandWithPrefix.substring(prefix.length, commandWithPrefix.length);
 		
@@ -56,6 +64,10 @@ bot.on('ready', () => {
 
 			case 'help':
 				msg.channel.send(help());
+				break;
+
+			case 'permission':
+				msg.channel.send(permissionAPI(msg, args, permissionTesInstance));
 				break;
 
 			default:
