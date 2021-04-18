@@ -5,18 +5,21 @@ const {sscanfSync} = require('nodejs-scanf');
 const defaults = {
 	displayString: '',
 	formatString: null,
-	items: []
+	items: [],
+	timezone: "+00:00"
 }
 
 module.exports = class DateFormatManager {
 	displayString = '';
 	formatString = null;
 	items = [];
+	timezone = "+00:00";
 	
 	constructor (config = defaults){
 		this.displayString = config.displayString;
 		this.formatString = config.formatString;
 		this.items = config.items;
+		this.timezone = config.timezone;
 	}
 
 	set(inputString){
@@ -47,7 +50,7 @@ module.exports = class DateFormatManager {
 		this.items = items;
 	}
 
-	parse(inputString, timezone = '+00:00'){
+	parse(inputString){
 		if (this.formatString !== null){
 			// set defaults if numbers not provided
 			
@@ -78,7 +81,7 @@ module.exports = class DateFormatManager {
 				s: map.s < 10 ? '0' + map.s.toString() : map.s.toString()
 			};
 
-			return Date.parse(`${strings.Y}-${strings.M}-${strings.D}T${strings.h}:${strings.m}:${strings.s}Z${timezone}`);
+			return Date.parse(`${strings.Y}-${strings.M}-${strings.D}T${strings.h}:${strings.m}:${strings.s}Z${this.timezone}`);
 		} else {
 			return Date.parse(inputString);
 		}
@@ -91,7 +94,8 @@ module.exports = class DateFormatManager {
 		return JSON.stringify({
 			displayString: this.displayString,
 			formatString: this.formatString,
-			items: this.items
+			items: this.items,
+			timezone: this.timezone
 		});
 	}
 
