@@ -1,9 +1,6 @@
 const Discord = require('discord.js');
 const config = require('../config/config');
 
-const users = global.users;
-const bot = global.bot;
-
 const priorities = {
 	high: 0,
 	medium: 0,
@@ -12,18 +9,8 @@ const priorities = {
 
 
 
-module.exports = async function reminderHandle(msg, args){
+module.exports = async function reminderHandle(msg, user, args){
 	const subcommand = args.shift();
-
-	const userID = msg.author.id;
-	let user;
-	if (!users.has(userID)){
-		user = new config.User(userID);
-		await user.initialize();
-		users.set(userID, user);
-	} else {
-		user = users.get(userID);
-	}
 
 	switch (subcommand){
 		case 'add':
@@ -43,7 +30,7 @@ module.exports = async function reminderHandle(msg, args){
 			const date = originalSplit.shift();
 			const text = originalSplit.join("\n");
 
-			if (typeof text === "undefined") return msg.channel.send(
+			if (typeof text === "undefined" || text === "") return msg.channel.send(
 				new Discord.MessageEmbed()
 				.addField('Wrong input error', 'Found no text. Are you sure you put it in the new line?')
 				.setColor('#fc1010')
@@ -58,7 +45,7 @@ module.exports = async function reminderHandle(msg, args){
 
 			user.reminders.add(when, text, priorityNumber);
 
-			await user.reminders.save(`./config/data/reminders/${userID}.json`);
+			await user.reminders.save(`./config/data/reminders/${user.id}.json`);
 
 			msg.channel.send(
 				new Discord.MessageEmbed()
@@ -69,6 +56,29 @@ module.exports = async function reminderHandle(msg, args){
 			break;
 		
 		case 'remove':
+			const removeIndex = Number(args[0]);
+
+			if (!Number.isInteger(removeIndex)) return msg.channel.send(
+				new Discord.MessageEmbed()
+				.addField('Wrong input error', 'Found no number of a reminder to be removed (It must be a positive integer).')
+				.setColor('#fc1010')
+			);
+
+			try {
+				user.reminders.remove(args);
+			} catch (error){
+				return msg.channel.send(
+					new Discord.MessageEmbed()
+					.addField('Error', `Reminder with number ${removeIndex} doesn't exist.`)
+					.setColor('#fc1010')
+				)
+			}
+
+			msg.channel.send(
+				new Discord.MessageEmbed()
+				.addField('Success', `Reminder removed successfully.`)
+				.setColor('#fcac34')
+			);
 
 			break;
 
