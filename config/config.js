@@ -18,11 +18,8 @@ module.exports.User = class User {
 			const config = await fs.readFile(`./config/data/reminders/${this.id}.json`);
 			const configParsed = JSON.parse(config);
 
-			console.log(configParsed);
-
 			this.reminders = new ReminderManager(configParsed);
 		} catch (error){
-			console.log(error);
 			this.reminders = new ReminderManager();
 		}
 		
