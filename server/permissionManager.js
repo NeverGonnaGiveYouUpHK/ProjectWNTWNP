@@ -35,9 +35,11 @@ module.exports = class PermissionManager {
         
         var userPermissions = this.#serverPermissions[userID];
 
-        if (userPermissions === undefined) 
+        if (userPermissions === undefined) {
             this.setPermission(userID, null);    
-
+            userPermissions = this.#serverPermissions[userID];
+        }
+        
         return {
             'success': true,
             'result': userPermissions
@@ -99,16 +101,19 @@ module.exports = class PermissionManager {
         if(permission === null) {
 
             //None is only able to be set, when you have no permissions set
-            if(userPermissions !== undefined)
+            if(userPermissions !== undefined){
                 return {
                     'success': false,
                     'result': null
                 };
-
+            }   
+            
             userPermissions = {
                 'ADMIN': false,
                 'MANAGE_TEAM': false,
             };
+
+            this.#serverPermissions[userID] = userPermissions;
 
             return {
                 'success': true,
@@ -123,6 +128,7 @@ module.exports = class PermissionManager {
                 'ADMIN': true,
                 'MANAGE_TEAM': true
             };
+            this.#serverPermissions[userID] = userPermissions;
 
             return {
                 'success': true,
@@ -130,10 +136,14 @@ module.exports = class PermissionManager {
             };
         }
 
-        if (userPermissions === undefined)
+        if (userPermissions === undefined) {
             this.setPermission(userID, null);
+            userPermissions = this.#serverPermissions[userID];
+        }
 
         userPermissions[permission] = true;
+
+        this.#serverPermissions[userID] = userPermissions;
 
         return {
             'success': true,
@@ -178,6 +188,8 @@ module.exports = class PermissionManager {
         }
 
         userPermissions[permission] = false;
+        this.#serverPermissions[userID] = userPermissions;
+        
         return {
             'success': true,
             'result': null

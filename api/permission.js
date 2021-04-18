@@ -6,25 +6,29 @@ const Discord = require('discord.js');
 //  Args: msg - Discord Message Object
 //
 //  Return: Embeded Message
-module.exports = function(callerID, targetID, subcommand, handler, permission) {
+module.exports = function(msg, args, permissionHandler) {
+ 
+    if (msg.mentions.users.first() === undefined) return new Discord.MessageEmbed()
+            .setTitle("Sus u didnt provide a mention. Amogus!");
 
-    switch (subcommand) {
-        
+    switch (args[0]) {
+
         case 'get':
+            
 
-            if (callerID != targetID && !handler.hasPermissions(callerID, 'ADMIN')) return new Discord.MessageEmbed()
+            if (msg.member.id != msg.mentions.users.first().id && !permissionHandler.hasPermissions(msg.member.id, 'ADMIN').result) return new Discord.MessageEmbed()
             .setTitle("Error!")
             .setColor("#FC1010")
             .addField("Unable to perform this action.", "Higher permissions required!");
 
-            var permissionList = handler.getPermissions(userID);
+            var permissionList = permissionHandler.getPermissions(msg.mentions.users.first().id);
             var embedMessage = new Discord.MessageEmbed()
             .setColor('#FCAC34')
-            .setTitle(userID);
+            .setTitle(msg.mentions.users.first().id);
 
 
-            for (const key of Object.keys(permissionList.result)) {
-                if (permissionList[key])
+            for (const key in permissionList.result) {
+                if (permissionList.result[key]) 
                     embedMessage.addField("DEBUG ONLY!", key);
             }
 
@@ -32,12 +36,13 @@ module.exports = function(callerID, targetID, subcommand, handler, permission) {
     
         case 'give':
             
-            if (handler.hasPermissions(callerID, 'ADMIN')) return new Discord.MessageEmbed()
+            if (!permissionHandler.hasPermissions(msg.member.id, 'ADMIN').result) return new Discord.MessageEmbed()
             .setTitle("Error!")
             .setColor("#FC1010")
             .addField("Unable to perform this action.", "Higher permissions required!");
 
-            var result = handler.setPermission(userID, permission);
+
+            var result = permissionHandler.setPermission(msg.mentions.users.first().id, args[2]);
 
             if (!result.success)return new Discord.MessageEmbed()
             .setTitle("Error!")
@@ -49,12 +54,12 @@ module.exports = function(callerID, targetID, subcommand, handler, permission) {
 
 
         case 'revoke':
-            if (handler.hasPermissions(callerID, 'ADMIN')) return new Discord.MessageEmbed()
+            if (!permissionHandler.hasPermissions(msg.member.id, 'ADMIN').result) return new Discord.MessageEmbed()
             .setTitle("Error!")
             .setColor("#FC1010")
             .addField("Unable to perform this action.", "Higher permissions required!");
 
-            var result = handler.revokePermission(userID, permission);
+            var result = permissionHandler.revokePermission(msg.mentions.users.first().id, args[2]);
 
             if (!result.success)return new Discord.MessageEmbed()
             .setTitle("Error!")
@@ -63,6 +68,15 @@ module.exports = function(callerID, targetID, subcommand, handler, permission) {
 
         return new Discord.MessageEmbed()
         .setTitle("SettingSuccess!");
+
+        case 'dump':
+            console.log(permissionHandler.getPermissionsObject());
+            return "Dumping permission object to debug console";
+
+
+        default:
+            return new Discord.MessageEmbed()
+            .setTitle("Sus u didnt provide a subcomand. Amogus!");
     }
 
 

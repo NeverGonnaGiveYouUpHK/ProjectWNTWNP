@@ -9,8 +9,13 @@ const prefix = "!";
 
 global.users = new Map();
 
+const PermissionManager = require('./server/permissionManager');
+const permissionAPI = require('./api/permission')
+
 const reminderHandle = require('./handles/reminderHandle');
 const help = require('./help');
+
+const permissionTesInstance = new PermissionManager();
 
 bot.on('ready', () => {
 	bot.on('message', async (msg) => {
@@ -18,6 +23,7 @@ bot.on('ready', () => {
 		
 		const split = msg.content.split(' ');
 
+		
 		const commandWithPrefix = split[0];
 		const command = commandWithPrefix.substring(prefix.length, commandWithPrefix.length);
 		
@@ -30,6 +36,10 @@ bot.on('ready', () => {
 
 			case 'help':
 				msg.channel.send(help());
+				break;
+
+			case 'permission':
+				msg.channel.send(permissionAPI(msg, args, permissionTesInstance));
 				break;
 
 			default:
