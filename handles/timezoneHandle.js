@@ -60,6 +60,11 @@ module.exports = async function reminderHandle(msg, user, args){
 			const finalString = `${sign}${hoursString.length === 2 ? hoursString : '0' + hoursString}:${minutesString.length === 2 ? minutesString : '0' + minutesString}`;
 
 			user.dateFormat.timezone = finalString;
+			user.dateFormat.timezoneOffset = (hoursNumber * 60 + minutesNumber) * 60 * 1000;
+			if (sign === '-'){
+				user.dateFormat.timezoneOffset *= -1;
+			}
+			
 
 			msg.channel.send(
 				new Discord.MessageEmbed()

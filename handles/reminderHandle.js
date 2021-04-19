@@ -74,6 +74,8 @@ module.exports = async function reminderHandle(msg, user, args){
 				)
 			}
 
+			await user.reminders.save(`./config/data/reminders/${user.id}.json`);
+
 			msg.channel.send(
 				new Discord.MessageEmbed()
 				.addField('Success', `Reminder removed successfully.`)

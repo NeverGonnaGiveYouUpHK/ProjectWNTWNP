@@ -6,20 +6,23 @@ const defaults = {
 	displayString: '',
 	formatString: null,
 	items: [],
-	timezone: "+00:00"
+	timezone: '+00:00',
+	timezoneOffset: 0
 }
 
 module.exports = class DateFormatManager {
 	displayString = '';
 	formatString = null;
 	items = [];
-	timezone = "+00:00";
+	timezone = '+00:00';
+	timezoneOffset = 0;
 	
 	constructor (config = defaults){
 		this.displayString = config.displayString;
 		this.formatString = config.formatString;
 		this.items = config.items;
 		this.timezone = config.timezone;
+		this.timezoneOffset = config.timezoneOffset;
 	}
 
 	set(inputString){
@@ -81,7 +84,9 @@ module.exports = class DateFormatManager {
 				s: map.s < 10 ? '0' + map.s.toString() : map.s.toString()
 			};
 
-			return Date.parse(`${strings.Y}-${strings.M}-${strings.D}T${strings.h}:${strings.m}:${strings.s}Z${this.timezone}`);
+			console.log(`${strings.Y}-${strings.M}-${strings.D}T${strings.h}:${strings.m}:${strings.s}${this.timezone}`);
+
+			return Date.parse(`${strings.Y}-${strings.M}-${strings.D}T${strings.h}:${strings.m}:${strings.s}${this.timezone}`);
 		} else {
 			return Date.parse(inputString);
 		}
@@ -95,7 +100,8 @@ module.exports = class DateFormatManager {
 			displayString: this.displayString,
 			formatString: this.formatString,
 			items: this.items,
-			timezone: this.timezone
+			timezone: this.timezone,
+			timezoneOffset: this.timezoneOffset
 		});
 	}
 
