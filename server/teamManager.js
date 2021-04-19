@@ -18,6 +18,14 @@ module.exports = class TeamManager {
                 'result': null
             };
 
+
+        if (this.#serverTeams[name] !== undefined)
+            return {
+                'success': false,
+                'result': null
+            };
+
+            
         this.#serverTeams[name] = {
 
             'admin': userID,
@@ -53,6 +61,7 @@ module.exports = class TeamManager {
             };
 
         team.members.push(userID);
+        this.#serverTeams[name] = team;
 
         return {
             'success': true,
@@ -82,7 +91,8 @@ module.exports = class TeamManager {
                 'result': 'User aleready assigned to team'
             };
 
-        team.members.push(userID);
+        team.members.splice(team.members.indexOf(userID, 1));
+        this.#serverTeams[name] = team;
 
         return {
             'success': true,
@@ -134,6 +144,19 @@ module.exports = class TeamManager {
         };
     }
 
+    saveTeamID(name, dscTeamID, dscChannelID) {
+        
+        if(dscChannelID != null)
+            this.#serverTeams[name].channelID = dscChannelID;
+        if(dscTeamID != null)
+            this.#serverTeams[name].teamID = dscTeamID;
+
+        return {
+            'success': true,
+            'result': null
+        };
+    }
+
     getTeamsObject() {
 
         return {
@@ -143,5 +166,5 @@ module.exports = class TeamManager {
     }
 
     #serverTeams = {};
-
+    
 }

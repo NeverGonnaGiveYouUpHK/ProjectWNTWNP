@@ -15,13 +15,23 @@ const bot = global.bot;
 
 const prefix = "!";
 
+
+
 const reminderHandle = require('./handles/reminderHandle');
 const timezoneHandle = require('./handles/timezoneHandle');
 const dateformatHandle = require('./handles/dateformatHandle');
 
 const help = require('./help');
 
-//const permissionTesInstance = new PermissionManager();
+const PermissionManager = require('./server/permissionManager');
+const permissionTesInstance = new PermissionManager();
+const permissionAPI = require('./api/permission');
+
+const TeamManager = require('./server/teamManager');
+const teamTesInstance = new TeamManager();
+const teamAPI = require('./api/team');
+
+
 
 bot.on('ready', () => {
 	bot.on('message', async (msg) => {
@@ -69,6 +79,11 @@ bot.on('ready', () => {
 			case 'permission':
 				msg.channel.send(permissionAPI(msg, args, permissionTesInstance));
 				break;
+
+			case 'team':
+				msg.channel.send(teamAPI(msg, args, teamTesInstance, permissionTesInstance));
+				break;
+
 
 			default:
 				break;
