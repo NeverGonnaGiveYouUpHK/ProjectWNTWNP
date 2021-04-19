@@ -28,7 +28,7 @@ module.exports = async function reminderHandle(msg, user, args){
 				);
 			}
 
-			await user.dateFormat.save();
+			await user.dateFormat.save(`./config/data/dateformat/${user.id}.json`);
 				
 			msg.channel.send(
 				new Discord.MessageEmbed()
