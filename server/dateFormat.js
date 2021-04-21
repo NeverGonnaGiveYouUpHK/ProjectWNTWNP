@@ -70,8 +70,10 @@ module.exports = class DateFormatManager {
 			};
 			
 			const numbers = sscanfSync(inputString, this.formatString);
+			console.log(this.formatString);
 
 			for (var i = 0; i < numbers.length && i < this.items.length; i++){
+				console.log(this.items[i]);
 				map[this.items[i]] = numbers[i];
 			}
 
@@ -84,6 +86,7 @@ module.exports = class DateFormatManager {
 				s: map.s < 10 ? '0' + map.s.toString() : map.s.toString()
 			};
 
+			console.log(inputString);
 			console.log(`${strings.Y}-${strings.M}-${strings.D}T${strings.h}:${strings.m}:${strings.s}${this.timezone}`);
 
 			return Date.parse(`${strings.Y}-${strings.M}-${strings.D}T${strings.h}:${strings.m}:${strings.s}${this.timezone}`);

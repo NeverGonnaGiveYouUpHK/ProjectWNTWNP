@@ -8,7 +8,6 @@ const priorities = {
 };
 
 
-
 module.exports = async function reminderHandle(msg, user, args){
 	const subcommand = args.shift();
 
@@ -17,7 +16,7 @@ module.exports = async function reminderHandle(msg, user, args){
 			const priority = args.shift().toLowerCase();
 			const priorityNumber = priorities[priority];
 
-			if (typeof priorityNumber === "undefined") return msg.channel.send(
+			if (typeof priorityNumber === 'undefined') return msg.channel.send(
 				new Discord.MessageEmbed()
 				.addField('Wrong input error', 'Failed to recognize priority, should be either low, medium or high.')
 				.setColor('#fc1010')
@@ -28,9 +27,9 @@ module.exports = async function reminderHandle(msg, user, args){
 			const originalSplit = originalText.split('\n');
 
 			const date = originalSplit.shift();
-			const text = originalSplit.join("\n");
+			const text = originalSplit.join('\n');
 
-			if (typeof text === "undefined" || text === "") return msg.channel.send(
+			if (typeof text === 'undefined' || text === '') return msg.channel.send(
 				new Discord.MessageEmbed()
 				.addField('Wrong input error', 'Found no text. Are you sure you put it in the new line?')
 				.setColor('#fc1010')
@@ -87,9 +86,9 @@ module.exports = async function reminderHandle(msg, user, args){
 		case 'list':			
 			msg.channel.send(listReminders(user.reminders.notifications, 0))
 			.then((message) => {
-				message.react("◀")
+				message.react('◀')
 				.then(() => {
-					message.react("▶")
+					message.react('▶')
 					.then(() => {
 						processPageMoves(message, user.reminders.notifications, 0)
 					});
@@ -107,9 +106,9 @@ module.exports = async function reminderHandle(msg, user, args){
 // copypasta from biblebot, who knows how it works, but it works
 function listReminders(notifications, page){
 	const reply = new Discord.MessageEmbed()
-	.setTitle("Listing set reminders...")
+	.setTitle('Listing set reminders...')
 	.setFooter(`Page ${page + 1}/${Math.ceil(notifications.length / 10)}`)
-	.setColor("#fcac34");
+	.setColor('#fcac34');
 	
 	for (var i = page * 10; i < (page + 1) * 10 && i < notifications.length; i++){
 		const reminder = notifications[i];
@@ -123,7 +122,7 @@ function listReminders(notifications, page){
 function processPageMoves(message, notifications, page){
 	let outerUser;
 	const filter = (reaction, user) => {
-		if (["◀", "▶"].includes(reaction.emoji.name) && !user.bot){
+		if (['◀', '▶'].includes(reaction.emoji.name) && !user.bot){
 			outerUser = user;
 			return true;
 		} else {
@@ -131,18 +130,18 @@ function processPageMoves(message, notifications, page){
 		}
 	};
 
-	message.awaitReactions(filter, {max: 1, time: 60000, errors: ["time"]})
+	message.awaitReactions(filter, {max: 1, time: 60000, errors: ['time']})
 	.then((collected) => {
 		const reaction = collected.first();
 
-		if (reaction.emoji.name === "◀") {
+		if (reaction.emoji.name === '◀') {
 			if (page > 0){
 				message.edit(listReminders(notifications, page - 1));
 				processPageMoves(message, notifications, page - 1);
 			} else {
 				processPageMoves(message, notifications, page);
 			}
-		} else if (reaction.emoji.name === "▶"){
+		} else if (reaction.emoji.name === '▶'){
 			if (page < Math.ceil(notifications.length / 10) - 1){
 				message.edit(listReminders(notifications, page + 1));
 				processPageMoves(message, notifications, page + 1);

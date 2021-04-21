@@ -65,6 +65,7 @@ module.exports = async function reminderHandle(msg, user, args){
 				user.dateFormat.timezoneOffset *= -1;
 			}
 			
+			await user.dateFormat.save(`./config/data/dateformat/${user.id}.json`);
 
 			msg.channel.send(
 				new Discord.MessageEmbed()

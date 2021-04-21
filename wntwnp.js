@@ -21,6 +21,8 @@ const reminderHandle = require('./handles/reminderHandle');
 const timezoneHandle = require('./handles/timezoneHandle');
 const dateformatHandle = require('./handles/dateformatHandle');
 
+require('./server/reminderScheduler')();
+
 const help = require('./help');
 
 const PermissionManager = require('./server/permissionManager');

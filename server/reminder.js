@@ -43,7 +43,7 @@ class Reminder {
 	toMessage(){
 		return new Discord.MessageEmbed()
 		.addField('Reminder', this.text)
-		.setColor(priorityColors[this.priorityColors]);
+		.setColor(priorityColors[this.priority]);
 	}
 
 	send(){

@@ -17,7 +17,9 @@ module.exports = async function reminderHandle(msg, user, args){
 			break;
 
 		case 'set':
-			const inputString = args.join(' ').replace('\\', '');
+			console.log(args.join(' '));
+			const inputString = args.join(' ').replace(/\\/g, '');
+			console.log(inputString);
 			try {
 				user.dateFormat.set(inputString)
 			} catch (error){
