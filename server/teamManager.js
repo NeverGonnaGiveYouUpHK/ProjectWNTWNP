@@ -10,25 +10,26 @@ module.exports = class TeamManager {
             this.#serverTeams = teamObject;
     }
 
-    createTeam(name, userID) {
+    createTeam(teamID, name, userID) {
 
-        if (typeof(name) !== 'string')
+
+        if (typeof(teamID) !== 'number')
             return {
                 'success': false,
-                'result': null
+                'result': 'teamID property is of invalid type (required: number)'
             };
 
-
-        if (this.#serverTeams[name] !== undefined)
+        if (this.#serverTeams[teamID] !== undefined)
             return {
                 'success': false,
                 'result': null
             };
 
             
-        this.#serverTeams[name] = {
+        this.#serverTeams[teamID] = {
 
             'admin': userID,
+            'name': name,
             'members': []
         };
 
@@ -38,15 +39,15 @@ module.exports = class TeamManager {
         };
     }
 
-    assignToTeam(name, userID) {
+    assignToTeam(teamID, userID) {
 
-        if (typeof(name) !== 'string')
+        if (typeof(teamID) !== 'number')
             return {
                 'success': false,
-                'result': 'NAME property is of invalid type (required: string)'
+                'result': 'teamID property is of invalid type (required: number)'
             };
 
-        var team = this.#serverTeams[name];
+        var team = this.#serverTeams[teamID];
 
         if (team === undefined)
             return {
@@ -61,7 +62,7 @@ module.exports = class TeamManager {
             };
 
         team.members.push(userID);
-        this.#serverTeams[name] = team;
+        this.#serverTeams[teamID] = team;
 
         return {
             'success': true,
@@ -69,15 +70,16 @@ module.exports = class TeamManager {
         };  
     }
 
-    kickFromTeam(name, userID) {
+    kickFromTeam(teamID, userID) {
 
-        if (typeof(name) !== 'string')
+        if (typeof(teamID) !== 'number')
             return {
                 'success': false,
-                'result': 'NAME property is of invalid type (required: string)'
+                'result': 'teamID property is of invalid type (required: number)'
             };
 
-        var team = this.#serverTeams[name];
+
+        var team = this.#serverTeams[teamID];
 
         if (team === undefined)
             return {
@@ -92,7 +94,7 @@ module.exports = class TeamManager {
             };
 
         team.members.splice(team.members.indexOf(userID, 1));
-        this.#serverTeams[name] = team;
+        this.#serverTeams[teamID] = team;
 
         return {
             'success': true,
@@ -100,15 +102,15 @@ module.exports = class TeamManager {
         };  
     }
 
-    getTeam(name) {
+    getTeam(teamID) {
 
-        if (typeof(name) !== 'string')
+        if (typeof(teamID) !== 'number')
             return {
                 'success': false,
-                'result': null
+                'result': 'teamID property is of invalid type (required: number)'
             };
 
-        var team = this.#serverTeams[name];
+        var team = this.#serverTeams[teamID];
 
         if (team === undefined)
             return {
@@ -122,21 +124,21 @@ module.exports = class TeamManager {
         };
     }
 
-    deleteTeam(name) {
+    deleteTeam(teamID) {
 
-        if (typeof(name) !== 'string')
+        if (typeof(teamID) !== 'number')
             return {
                 'success': false,
-                'result': 'NAME property is of invalid type (required: string)'
+                'result': 'teamID property is of invalid type (required: number)'
             };
 
-        if (this.#serverTeams[name] === undefined)
+        if (this.#serverTeams[teamID] === undefined)
             return {
                 'success': false,
                 'result': 'Requested team does not exist'
             };
 
-        delete this.#serverTeams[name];
+        delete this.#serverTeams[teamID];
 
         return {
             'success': true,
@@ -144,12 +146,12 @@ module.exports = class TeamManager {
         };
     }
 
-    saveTeamID(name, dscTeamID, dscChannelID) {
+    saveTeamID(teamID, dscTeamID, dscChannelID) {
         
         if(dscChannelID != null)
-            this.#serverTeams[name].channelID = dscChannelID;
+            this.#serverTeams[teamID].channelID = dscChannelID;
         if(dscTeamID != null)
-            this.#serverTeams[name].teamID = dscTeamID;
+            this.#serverTeams[teamID].teamID = dscTeamID;
 
         return {
             'success': true,

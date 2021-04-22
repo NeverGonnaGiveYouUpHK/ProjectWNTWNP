@@ -221,6 +221,7 @@ module.exports = class PermissionManager {
     *
     * ADMIN:                Manage Privileges
     * MANAGE_TEAM:          create and manage teams
+    * MANAGE_TASK:          create and manage tasks
     * 
     * Add More
     * 

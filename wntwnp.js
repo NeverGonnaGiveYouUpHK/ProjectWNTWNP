@@ -86,7 +86,9 @@ bot.on('ready', () => {
 				msg.channel.send(teamAPI(msg, args, teamTesInstance, permissionTesInstance));
 				break;
 
-
+			case 'task':
+				return msg.channel.send('<@!331111981698252800>');
+			
 			default:
 				break;
 		}
