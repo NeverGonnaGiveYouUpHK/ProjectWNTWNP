@@ -24,16 +24,18 @@ const dateformatHandle = require('./handles/dateformatHandle');
 require('./server/reminderScheduler')();
 
 const help = require('./help');
+const permissionAPI = require('./api/permission');
+const teamAPI = require('./api/permission');
+const teamAPI = require('./api/permission');
 
 const PermissionManager = require('./server/permissionManager');
 const permissionTesInstance = new PermissionManager();
-const permissionAPI = require('./api/permission');
 
 const TeamManager = require('./server/teamManager');
 const teamTesInstance = new TeamManager();
-const teamAPI = require('./api/team');
 
-
+const TaskManager = require('./server/taskManager');
+const taskTesInstance = new TaskManager();
 
 bot.on('ready', () => {
 	bot.on('message', async (msg) => {
@@ -86,7 +88,9 @@ bot.on('ready', () => {
 				msg.channel.send(teamAPI(msg, args, teamTesInstance, permissionTesInstance));
 				break;
 
-
+			case 'task':
+				msg.channel.send(taskAPI(msg, args, taskTesInstance, permissionTesInstance, user));
+			
 			default:
 				break;
 		}

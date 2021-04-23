@@ -221,9 +221,8 @@ module.exports = class PermissionManager {
     *
     * ADMIN:                Manage Privileges
     * MANAGE_TEAM:          create and manage teams
-    * 
-    * Add More
-    * 
+    * MANAGE_TASK:          create and manage tasks
     * 
     */
+    validPermissions = ['ADMIN', 'MANAGE_TEAM', 'MANAGE_TASK'];
 }
