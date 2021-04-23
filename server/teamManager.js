@@ -13,10 +13,10 @@ module.exports = class TeamManager {
     createTeam(teamID, name, userID) {
 
 
-        if (typeof(teamID) !== 'number')
+        if (typeof(teamID) !== 'string')
             return {
                 'success': false,
-                'result': 'teamID property is of invalid type (required: number)'
+                'result': 'teamID property is of invalid type (required: string)'
             };
 
         if (this.#serverTeams[teamID] !== undefined)
@@ -41,10 +41,10 @@ module.exports = class TeamManager {
 
     assignToTeam(teamID, userID) {
 
-        if (typeof(teamID) !== 'number')
+        if (typeof(teamID) !== 'string')
             return {
                 'success': false,
-                'result': 'teamID property is of invalid type (required: number)'
+                'result': 'teamID property is of invalid type (required: string)'
             };
 
         var team = this.#serverTeams[teamID];
@@ -72,10 +72,10 @@ module.exports = class TeamManager {
 
     kickFromTeam(teamID, userID) {
 
-        if (typeof(teamID) !== 'number')
+        if (typeof(teamID) !== 'string')
             return {
                 'success': false,
-                'result': 'teamID property is of invalid type (required: number)'
+                'result': 'teamID property is of invalid type (required: string)'
             };
 
 
@@ -104,10 +104,10 @@ module.exports = class TeamManager {
 
     getTeam(teamID) {
 
-        if (typeof(teamID) !== 'number')
+        if (typeof(teamID) !== 'string')
             return {
                 'success': false,
-                'result': 'teamID property is of invalid type (required: number)'
+                'result': 'teamID property is of invalid type (required: string)'
             };
 
         var team = this.#serverTeams[teamID];
@@ -126,10 +126,10 @@ module.exports = class TeamManager {
 
     deleteTeam(teamID) {
 
-        if (typeof(teamID) !== 'number')
+        if (typeof(teamID) !== 'string')
             return {
                 'success': false,
-                'result': 'teamID property is of invalid type (required: number)'
+                'result': 'teamID property is of invalid type (required: string)'
             };
 
         if (this.#serverTeams[teamID] === undefined)
@@ -146,10 +146,12 @@ module.exports = class TeamManager {
         };
     }
 
-    saveTeamID(teamID, dscTeamID, dscChannelID) {
+    saveTeamID(teamID, dscTeamID, dscVChannelID, dscTChannelID) {
         
-        if(dscChannelID != null)
-            this.#serverTeams[teamID].channelID = dscChannelID;
+        if(dscVChannelID != null)
+            this.#serverTeams[teamID].vchannelID = dscVChannelID;
+        if(dscTChannelID != null)
+            this.#serverTeams[teamID].tchannelID = dscTChannelID;
         if(dscTeamID != null)
             this.#serverTeams[teamID].teamID = dscTeamID;
 
@@ -158,6 +160,12 @@ module.exports = class TeamManager {
             'result': null
         };
     }
+
+    teamExists(teamID) {
+
+		if (this.#serverTeams[teamID] === undefined) return false;
+		return true;
+	}
 
     getTeamsObject() {
 

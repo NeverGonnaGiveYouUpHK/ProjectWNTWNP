@@ -33,7 +33,9 @@ const TeamManager = require('./server/teamManager');
 const teamTesInstance = new TeamManager();
 const teamAPI = require('./api/team');
 
-
+const TaskManager = require('./server/taskManager');
+const taskTesInstance = new TaskManager();
+const taskAPI = require('./api/task');
 
 bot.on('ready', () => {
 	bot.on('message', async (msg) => {
@@ -87,7 +89,7 @@ bot.on('ready', () => {
 				break;
 
 			case 'task':
-				return msg.channel.send('<@!331111981698252800>');
+				msg.channel.send(taskAPI(msg, args, taskTesInstance, permissionTesInstance, user));
 			
 			default:
 				break;

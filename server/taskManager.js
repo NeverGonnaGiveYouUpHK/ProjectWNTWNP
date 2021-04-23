@@ -11,10 +11,10 @@ module.exports = class TaskManager {
 
 	getTask(taskID) {
 
-		if (typeof(taskID) !== 'number')
+		if (typeof(taskID) !== 'string')
 			return {
 				'success': false,
-				'result': 'taskID property is of invalid type (required: number)'
+				'result': 'taskID property is of invalid type (required: string)'
 			};
 
 		var task = this.#serverTasks[taskID];
@@ -51,6 +51,11 @@ module.exports = class TaskManager {
 			status: "Work In Progress",
 			members: []
 		};
+
+		return {
+			'success': true,
+			'result': null
+		};
 	}
 
 	getTasksByUser(userID) {
@@ -74,7 +79,7 @@ module.exports = class TaskManager {
 		if (typeof(taskID) !== 'string')
 			return {
 				'success': false,
-				'result': 'taskID property is of invalid type (required: number)'
+				'result': 'taskID property is of invalid type (required: string)'
 			};
 
 		if (this.#serverTasks[taskID] === undefined)
@@ -94,10 +99,10 @@ module.exports = class TaskManager {
 
 	assignMember(taskID, userID) {
 
-		if (typeof(taskID) !== 'number')
+		if (typeof(taskID) !== 'string')
 		return {
 			'success': false,
-			'result': 'taskID property is of invalid type (required: number)'
+			'result': 'taskID property is of invalid type (required: string)'
 		};
 
 		if (this.#serverTasks[taskID] === undefined)
@@ -106,13 +111,34 @@ module.exports = class TaskManager {
 				'result': null
 			};
 
-		if (this.#serverTasks[taskID].members.indexOf(userID) === -1)
+		if (this.#serverTasks[taskID].members.indexOf(userID) !== -1)
 			return {
 				'success': false,
 				'result': null
 			};
 		
 		this.#serverTasks[taskID].members.push(userID);
+		return {
+			'success': true,
+			'result': null
+		};
+	}
+
+	removeTask(taskID) {
+		if (typeof(taskID) !== 'string')
+			return {
+				'success': false,
+				'result': 'taskID property is of invalid type (required: string)'
+			};
+
+		if (this.#serverTasks[taskID] === undefined)
+			return {
+				'success': false,
+				'result': null
+			};
+		
+		delete this.#serverTasks[taskID];
+
 		return {
 			'success': true,
 			'result': null

@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-
+const crypto = require('crypto');
 
 //Permission command callback.
 //
@@ -8,7 +8,8 @@ const Discord = require('discord.js');
 //  Return: Embeded Message
 module.exports = function(msg, args, teamHandler, permissionHandler) {
 
-    switch (args[0]) {
+    var subcommand = args.shift();
+    switch (subcommand) {
         
         case 'create':
 
@@ -17,34 +18,55 @@ module.exports = function(msg, args, teamHandler, permissionHandler) {
             .setColor("#FC1010")
             .addField("Unable to perform this action.", "Higher permissions required!");
 
-            var creationResult = teamHandler.createTeam(args[1], msg.member.id);
+            var id;
+
+            do {
+                //Generate the random ID
+                id = crypto.randomBytes(4).toString('hex');
+            } while(teamHandler.teamExists(id));
+
+            const originalText = args.join(' ');
+            var creationResult = teamHandler.createTeam(id, originalText, msg.member.id);
 
             if(!creationResult.success) return new Discord.MessageEmbed()
             .setTitle("Error!")
             .setColor("#FC1010")
             .addField("Unable to perform this action.", "Invalid name or !");
 
+
+
             msg.guild.roles.create({
                 data: {
-                  name: args[1],
+                  name: originalText,
                   color: '#FCAC34',
                 }
             }).then((res) => {
-                teamHandler.saveTeamID(args[1], res.id, null);
+                teamHandler.saveTeamID(id, res.id, null, null);
               })
               .catch(console.error);
 
-            msg.guild.channels.create(args[1], { //Create a channel
+            msg.guild.channels.create(originalText, { //Create a channel
+                type: 'voice', //Make sure the channel is a text channel
+                permissionOverwrites: [{ //Set permission overwrites
+                    id: msg.guild.id,
+                    allow: ['VIEW_CHANNEL'],
+                }]
+            }).then((res) => {
+                teamHandler.saveTeamID(id, null, res.id, null);
+            }) 
+            .catch(console.error);
+
+
+            msg.guild.channels.create(originalText, { //Create a channel
                 type: 'text', //Make sure the channel is a text channel
                 permissionOverwrites: [{ //Set permission overwrites
                     id: msg.guild.id,
                     allow: ['VIEW_CHANNEL'],
                 }]
             }).then((res) => {
-                teamHandler.saveTeamID(args[1], null, res.id);
+                teamHandler.saveTeamID(id, null, null, res.id);
             }) 
             .catch(console.error);
-
 
 
         return "ASDQASD";
