@@ -4,177 +4,177 @@
 module.exports = class TeamManager {
 
 
-    constructor(teamObject) {
+	constructor(teamObject) {
 
-        if (teamObject !== undefined)
-            this.#serverTeams = teamObject;
-    }
+		if (teamObject !== undefined)
+			this.#serverTeams = teamObject;
+	}
 
-    createTeam(teamID, name, userID) {
-
-
-        if (typeof(teamID) !== 'string')
-            return {
-                'success': false,
-                'result': 'teamID property is of invalid type (required: string)'
-            };
-
-        if (this.#serverTeams[teamID] !== undefined)
-            return {
-                'success': false,
-                'result': null
-            };
-
-            
-        this.#serverTeams[teamID] = {
-
-            'admin': userID,
-            'name': name,
-            'members': []
-        };
-
-        return {
-            'success': true,
-            'result': name
-        };
-    }
-
-    assignToTeam(teamID, userID) {
-
-        if (typeof(teamID) !== 'string')
-            return {
-                'success': false,
-                'result': 'teamID property is of invalid type (required: string)'
-            };
-
-        var team = this.#serverTeams[teamID];
-
-        if (team === undefined)
-            return {
-                'success': false,
-                'result': 'Requested team does not exist'
-            };
-
-        if (team.admin == userID || team.members.includes(userID)) 
-            return {
-                'success': false,
-                'result': 'User aleready assigned to team'
-            };
-
-        team.members.push(userID);
-        this.#serverTeams[teamID] = team;
-
-        return {
-            'success': true,
-            'result': userID
-        };  
-    }
-
-    kickFromTeam(teamID, userID) {
-
-        if (typeof(teamID) !== 'string')
-            return {
-                'success': false,
-                'result': 'teamID property is of invalid type (required: string)'
-            };
+	createTeam(teamID, name, userID) {
 
 
-        var team = this.#serverTeams[teamID];
+		if (typeof(teamID) !== 'string')
+			return {
+				'success': false,
+				'result': 'teamID property is of invalid type (required: string)'
+			};
 
-        if (team === undefined)
-            return {
-                'success': false,
-                'result': 'Requested team does not exist'
-            };
+		if (this.#serverTeams[teamID] !== undefined)
+			return {
+				'success': false,
+				'result': null
+			};
 
-        if (team.admin == userID || team.members.includes(userID)) 
-            return {
-                'success': false,
-                'result': 'User aleready assigned to team'
-            };
+			
+		this.#serverTeams[teamID] = {
 
-        team.members.splice(team.members.indexOf(userID, 1));
-        this.#serverTeams[teamID] = team;
+			'admin': userID,
+			'name': name,
+			'members': []
+		};
 
-        return {
-            'success': true,
-            'result': userID
-        };  
-    }
+		return {
+			'success': true,
+			'result': name
+		};
+	}
 
-    getTeam(teamID) {
+	assignToTeam(teamID, userID) {
 
-        if (typeof(teamID) !== 'string')
-            return {
-                'success': false,
-                'result': 'teamID property is of invalid type (required: string)'
-            };
+		if (typeof(teamID) !== 'string')
+			return {
+				'success': false,
+				'result': 'teamID property is of invalid type (required: string)'
+			};
 
-        var team = this.#serverTeams[teamID];
+		var team = this.#serverTeams[teamID];
 
-        if (team === undefined)
-            return {
-                'success': false,
-                'result': null
-            };
+		if (team === undefined)
+			return {
+				'success': false,
+				'result': 'Requested team does not exist'
+			};
 
-        return {
-            'success': true,
-            'result': team
-        };
-    }
+		if (team.admin == userID || team.members.includes(userID)) 
+			return {
+				'success': false,
+				'result': 'User aleready assigned to team'
+			};
 
-    deleteTeam(teamID) {
+		team.members.push(userID);
+		this.#serverTeams[teamID] = team;
 
-        if (typeof(teamID) !== 'string')
-            return {
-                'success': false,
-                'result': 'teamID property is of invalid type (required: string)'
-            };
+		return {
+			'success': true,
+			'result': userID
+		};  
+	}
 
-        if (this.#serverTeams[teamID] === undefined)
-            return {
-                'success': false,
-                'result': 'Requested team does not exist'
-            };
+	kickFromTeam(teamID, userID) {
 
-        delete this.#serverTeams[teamID];
+		if (typeof(teamID) !== 'string')
+			return {
+				'success': false,
+				'result': 'teamID property is of invalid type (required: string)'
+			};
 
-        return {
-            'success': true,
-            'result': null
-        };
-    }
 
-    saveTeamID(teamID, dscTeamID, dscVChannelID, dscTChannelID) {
-        
-        if(dscVChannelID != null)
-            this.#serverTeams[teamID].vchannelID = dscVChannelID;
-        if(dscTChannelID != null)
-            this.#serverTeams[teamID].tchannelID = dscTChannelID;
-        if(dscTeamID != null)
-            this.#serverTeams[teamID].teamID = dscTeamID;
+		var team = this.#serverTeams[teamID];
 
-        return {
-            'success': true,
-            'result': null
-        };
-    }
+		if (team === undefined)
+			return {
+				'success': false,
+				'result': 'Requested team does not exist'
+			};
 
-    teamExists(teamID) {
+		if (team.admin == userID || team.members.includes(userID)) 
+			return {
+				'success': false,
+				'result': 'User aleready assigned to team'
+			};
+
+		team.members.splice(team.members.indexOf(userID, 1));
+		this.#serverTeams[teamID] = team;
+
+		return {
+			'success': true,
+			'result': userID
+		};  
+	}
+
+	getTeam(teamID) {
+
+		if (typeof(teamID) !== 'string')
+			return {
+				'success': false,
+				'result': 'teamID property is of invalid type (required: string)'
+			};
+
+		var team = this.#serverTeams[teamID];
+
+		if (team === undefined)
+			return {
+				'success': false,
+				'result': null
+			};
+
+		return {
+			'success': true,
+			'result': team
+		};
+	}
+
+	deleteTeam(teamID) {
+
+		if (typeof(teamID) !== 'string')
+			return {
+				'success': false,
+				'result': 'teamID property is of invalid type (required: string)'
+			};
+
+		if (this.#serverTeams[teamID] === undefined)
+			return {
+				'success': false,
+				'result': 'Requested team does not exist'
+			};
+
+		delete this.#serverTeams[teamID];
+
+		return {
+			'success': true,
+			'result': null
+		};
+	}
+
+	saveTeamID(teamID, dscTeamID, dscVChannelID, dscTChannelID) {
+		
+		if(dscVChannelID != null)
+			this.#serverTeams[teamID].vchannelID = dscVChannelID;
+		if(dscTChannelID != null)
+			this.#serverTeams[teamID].tchannelID = dscTChannelID;
+		if(dscTeamID != null)
+			this.#serverTeams[teamID].teamID = dscTeamID;
+
+		return {
+			'success': true,
+			'result': null
+		};
+	}
+
+	teamExists(teamID) {
 
 		if (this.#serverTeams[teamID] === undefined) return false;
 		return true;
 	}
 
-    getTeamsObject() {
+	getTeamsObject() {
 
-        return {
-            'success': true,
-            'result': this.#serverTeams
-        }
-    }
+		return {
+			'success': true,
+			'result': this.#serverTeams
+		}
+	}
 
-    #serverTeams = {};
-    
+	#serverTeams = {};
+	
 }

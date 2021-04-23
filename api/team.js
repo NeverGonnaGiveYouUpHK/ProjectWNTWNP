@@ -6,13 +6,13 @@ const crypto = require('crypto');
 //  Args: msg - Discord Message Object
 //
 //  Return: Embeded Message
-module.exports = function(msg, args, teamHandler, permissionHandler) {
+module.exports = function(msg, args, teamHandler, permissionHandler, guild) {
 
     var subcommand = args.shift();
     switch (subcommand) {
         
         case 'create':
-
+        {
             if (!permissionHandler.hasPermissions(msg.member.id, 'ADMIN').result && !permissionHandler.hasPermissions(msg.member.id, 'MANAGE_TEAM').result) return new Discord.MessageEmbed()
             .setTitle("Error!")
             .setColor("#FC1010")
@@ -31,7 +31,7 @@ module.exports = function(msg, args, teamHandler, permissionHandler) {
             if(!creationResult.success) return new Discord.MessageEmbed()
             .setTitle("Error!")
             .setColor("#FC1010")
-            .addField("Unable to perform this action.", "Invalid name or !");
+            .addField("Unable to perform this action.", "Unable to create new team!");
 
 
 
@@ -41,18 +41,19 @@ module.exports = function(msg, args, teamHandler, permissionHandler) {
                   color: '#FCAC34',
                 }
             }).then((res) => {
-                teamHandler.saveTeamID(id, res.id, null, null);
-              })
-              .catch(console.error);
+                teamHandler.saveTeamID(id, res, null, null);
+                guild.members.cache.get(msg.member.id).roles.add(res);
+            })
+            .catch(console.error);
 
             msg.guild.channels.create(originalText, { //Create a channel
-                type: 'voice', //Make sure the channel is a text channel
+                type: 'voice', //Make sure the channel is a voice channel
                 permissionOverwrites: [{ //Set permission overwrites
                     id: msg.guild.id,
                     allow: ['VIEW_CHANNEL'],
                 }]
             }).then((res) => {
-                teamHandler.saveTeamID(id, null, res.id, null);
+                teamHandler.saveTeamID(id, null, res, null);
             }) 
             .catch(console.error);
 
@@ -64,17 +65,15 @@ module.exports = function(msg, args, teamHandler, permissionHandler) {
                     allow: ['VIEW_CHANNEL'],
                 }]
             }).then((res) => {
-                teamHandler.saveTeamID(id, null, null, res.id);
+                teamHandler.saveTeamID(id, null, null, res);
             }) 
             .catch(console.error);
 
 
-        return "ASDQASD";
-    
-        case 'dump':
-            console.log(teamHandler.getTeamsObject());
-            return "Dumping team object to debug console";
-
+            return new Discord.MessageEmbed()
+			.setColor("#FCAC34")
+			.addField("Task " + originalText + " succesfully created!", "ID: " + id);
+        }
 
         case 'assign':
             
@@ -84,14 +83,42 @@ module.exports = function(msg, args, teamHandler, permissionHandler) {
             .addField("Unable to perform this action.", "Higher permissions required!");
 
             if (msg.mentions.users.first() === undefined) return new Discord.MessageEmbed()
-                .setTitle("Sus u didnt provide a mention. Amogus!");
+			.setTitle("Error!")
+			.setColor("#FC1010")
+			.addField("No user specified!", "You need to mention a user if you want to give them permissions.");
 
-            var result = teamHandler.assignToTeam(args[1], msg.mentions.users.first().id);
+            var result = teamHandler.assignToTeam(args[0], msg.mentions.users.first().id);
     
             if (!result.success) return new Discord.MessageEmbed()
             .setTitle("Error!")
             .setColor("#FC1010")
-            .addField("Unable to perform this action.", "User has already permissions set!");
+            .addField("Unable to perform this action.", "Invalid ID provided or user is already part of the team");
+
+            var team = teamHandler.getTeam(args[0]);
+
+            if (!team.success) return new Discord.MessageEmbed()
+            .setTitle("Error!")
+            .setColor("#FC1010")
+            .addField("Unable to perform this action.", "Internal server error occured. Please try again.");
+
+            guild.members.cache.get(msg.mentions.users.first().id).roles.add(team.result.teamID);
+
+            return new Discord.MessageEmbed()
+			.setColor("#FCAC34")
+			.addField("Success!", "Successfully assigned <@" + msg.mentions.users.first().id + "> to team " + args[0]);
+
+        case 'kick':
+            if (!permissionHandler.hasPermissions(msg.member.id, 'ADMIN')) return new Discord.MessageEmbed()
+            .setTitle("Error!")
+            .setColor("#FC1010")
+            .addField("Unable to perform this action.", "Higher permissions required!");
+
+            var result = teamHandler.kickFromTeam(args[0], msg.mentions.users.first());
+
+            if (!result.success)return new Discord.MessageEmbed()
+            .setTitle("Error!")
+            .setColor("#FC1010")
+            .addField("Unable to perform this action.", "Invalid id provided or user isn't part of the team!");
 
             var team = teamHandler.getTeam(args[0]);
 
@@ -100,29 +127,11 @@ module.exports = function(msg, args, teamHandler, permissionHandler) {
             .setColor("#FC1010")
             .addField("Unable to perform this action.", "User has already permissions set!");
 
-
-            console.log(msg.mentions.users.first());
-            //msg.mentions.users.first().roles.add(team.teamID);
+            guild.members.cache.get(msg.mentions.users.first().id).roles.remove(team.result.teamID);
 
             return new Discord.MessageEmbed()
-            .setTitle("SettingSuccess!");
-
-        case 'kick':
-            if (handler.hasPermissions(callerID, 'ADMIN')) return new Discord.MessageEmbed()
-            .setTitle("Error!")
-            .setColor("#FC1010")
-            .addField("Unable to perform this action.", "Higher permissions required!");
-
-            var result = handler.kickFromTeam(args[0], msg.mentions.users.first());
-            //Remove from role
-
-            if (!result.success)return new Discord.MessageEmbed()
-            .setTitle("Error!")
-            .setColor("#FC1010")
-            .addField("Unable to perform this action.", "Invalid id provided or user isn't part of the team!");
-
-        return new Discord.MessageEmbed()
-        .setTitle("SettingSuccess!");
+			.setColor("#FCAC34")
+			.addField("Success!", "Successfully kicked <@" + msg.mentions.users.first().id + "> to team " + args[0]);
     }
 
 

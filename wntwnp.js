@@ -26,8 +26,8 @@ require('./server/reminderScheduler')();
 
 const help = require('./help');
 const permissionAPI = require('./api/permission');
-const teamAPI = require('./api/permission');
-const teamAPI = require('./api/permission');
+const teamAPI = require('./api/team');
+const taskAPI = require('./api/task');
 
 const PermissionManager = require('./server/permissionManager');
 const permissionTesInstance = new PermissionManager();
@@ -90,7 +90,9 @@ bot.on('ready', () => {
 				break;
 
 			case 'team':
-				msg.channel.send(teamAPI(msg, args, teamTesInstance, permissionTesInstance));
+
+				var guild = await bot.guilds.fetch(msg.guild.id);
+				msg.channel.send(teamAPI(msg, args, teamTesInstance, permissionTesInstance, guild));
 				break;
 
 			case 'task':

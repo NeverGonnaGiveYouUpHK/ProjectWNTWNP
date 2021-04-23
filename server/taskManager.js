@@ -120,7 +120,7 @@ module.exports = class TaskManager {
 		this.#serverTasks[taskID].members.push(userID);
 		return {
 			'success': true,
-			'result': null
+			'result': this.#serverTasks[taskID]
 		};
 	}
 
