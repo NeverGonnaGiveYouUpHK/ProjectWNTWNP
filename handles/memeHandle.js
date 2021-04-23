@@ -1,7 +1,33 @@
 const Discord = require('discord.js');
 
 const config = require('../config/config');
-const memes = config.meme();
+
+let memes, memeChannels;
+
+(async function(){
+	memes = await config.memes();
+
+	global.memeChannels = await config.memeChannels();
+	memeChannels = global.memeChannels;
+})();
+
+
+setTimeout(() => {
+	sendDaMemes();
+	setInterval(sendDaMemes, 24 * 60 * 60 * 1000);
+}, 24 * 60 * 60 * 1000 - Date.now() % 24 * 60 * 60 * 1000);
+
+function sendDaMemes(){
+	try {
+		const meme = memes.feed();
+		
+		memeChannels.send(meme.link);
+
+		memes.save('./config/data/memes.json');
+	} catch (error) {
+		console.log(error.message);
+	}
+}
 
 module.exports = async function reminderHandle(msg, user, args){
 	const subcommand = args.shift();
@@ -57,14 +83,15 @@ module.exports = async function reminderHandle(msg, user, args){
 
 			break;
 
-		case 'list':			
-			msg.channel.send(listMemes(memes.links, 0))
+		case 'list':
+			console.log(memes);
+			msg.channel.send(listMemes(memes.memes, 0))
 			.then((message) => {
 				message.react('◀')
 				.then(() => {
 					message.react('▶')
 					.then(() => {
-						processPageMoves(message, memes.links, 0);
+						processPageMoves(message, memes.memes, 0);
 					});
 				});
 			});
@@ -106,14 +133,14 @@ function processPageMoves(message, memesList, page){
 
 		if (reaction.emoji.name === '◀') {
 			if (page > 0){
-				message.edit(listReminders(memesList, page - 1));
+				message.edit(listMemes(memesList, page - 1));
 				processPageMoves(message, memesList, page - 1);
 			} else {
 				processPageMoves(message, memesList, page);
 			}
 		} else if (reaction.emoji.name === '▶'){
 			if (page < Math.ceil(memesList.length / 10) - 1){
-				message.edit(listReminders(memesList, page + 1));
+				message.edit(listMemes(memesList, page + 1));
 				processPageMoves(message, memesList, page + 1);
 			} else {
 				processPageMoves(message, memesList, page);
