@@ -7,7 +7,7 @@ module.exports = class TeamManager {
 	constructor(teamObject) {
 
 		if (teamObject !== undefined)
-			this.#serverTeams = teamObject;
+			this.serverTeams = teamObject;
 	}
 
 	createTeam(teamID, name, userID) {
@@ -19,14 +19,14 @@ module.exports = class TeamManager {
 				'result': 'teamID property is of invalid type (required: string)'
 			};
 
-		if (this.#serverTeams[teamID] !== undefined)
+		if (this.serverTeams[teamID] !== undefined)
 			return {
 				'success': false,
 				'result': null
 			};
 
 			
-		this.#serverTeams[teamID] = {
+		this.serverTeams[teamID] = {
 
 			'admin': userID,
 			'name': name,
@@ -47,7 +47,7 @@ module.exports = class TeamManager {
 				'result': 'teamID property is of invalid type (required: string)'
 			};
 
-		var team = this.#serverTeams[teamID];
+		var team = this.serverTeams[teamID];
 
 		if (team === undefined)
 			return {
@@ -62,7 +62,7 @@ module.exports = class TeamManager {
 			};
 
 		team.members.push(userID);
-		this.#serverTeams[teamID] = team;
+		this.serverTeams[teamID] = team;
 
 		return {
 			'success': true,
@@ -79,7 +79,7 @@ module.exports = class TeamManager {
 			};
 
 
-		var team = this.#serverTeams[teamID];
+		var team = this.serverTeams[teamID];
 
 		if (team === undefined)
 			return {
@@ -94,7 +94,7 @@ module.exports = class TeamManager {
 			};
 
 		team.members.splice(team.members.indexOf(userID, 1));
-		this.#serverTeams[teamID] = team;
+		this.serverTeams[teamID] = team;
 
 		return {
 			'success': true,
@@ -110,7 +110,7 @@ module.exports = class TeamManager {
 				'result': 'teamID property is of invalid type (required: string)'
 			};
 
-		var team = this.#serverTeams[teamID];
+		var team = this.serverTeams[teamID];
 
 		if (team === undefined)
 			return {
@@ -132,13 +132,13 @@ module.exports = class TeamManager {
 				'result': 'teamID property is of invalid type (required: string)'
 			};
 
-		if (this.#serverTeams[teamID] === undefined)
+		if (this.serverTeams[teamID] === undefined)
 			return {
 				'success': false,
 				'result': 'Requested team does not exist'
 			};
 
-		delete this.#serverTeams[teamID];
+		delete this.serverTeams[teamID];
 
 		return {
 			'success': true,
@@ -149,11 +149,11 @@ module.exports = class TeamManager {
 	saveTeamID(teamID, dscTeamID, dscVChannelID, dscTChannelID) {
 		
 		if(dscVChannelID != null)
-			this.#serverTeams[teamID].vchannelID = dscVChannelID;
+			this.serverTeams[teamID].vchannelID = dscVChannelID;
 		if(dscTChannelID != null)
-			this.#serverTeams[teamID].tchannelID = dscTChannelID;
+			this.serverTeams[teamID].tchannelID = dscTChannelID;
 		if(dscTeamID != null)
-			this.#serverTeams[teamID].teamID = dscTeamID;
+			this.serverTeams[teamID].teamID = dscTeamID;
 
 		return {
 			'success': true,
@@ -163,7 +163,7 @@ module.exports = class TeamManager {
 
 	teamExists(teamID) {
 
-		if (this.#serverTeams[teamID] === undefined) return false;
+		if (this.serverTeams[teamID] === undefined) return false;
 		return true;
 	}
 
@@ -171,10 +171,10 @@ module.exports = class TeamManager {
 
 		return {
 			'success': true,
-			'result': this.#serverTeams
+			'result': this.serverTeams
 		}
 	}
 
-	#serverTeams = {};
+	serverTeams = {};
 	
 }

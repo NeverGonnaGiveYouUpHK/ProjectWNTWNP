@@ -5,7 +5,7 @@ module.exports = class TaskManager {
 	constructor(taskObject) {
 
 		if (taskObject !== undefined)
-			this.#serverTasks = taskObject;
+			this.serverTasks = taskObject;
 	}
 
 
@@ -17,7 +17,7 @@ module.exports = class TaskManager {
 				'result': 'taskID property is of invalid type (required: string)'
 			};
 
-		var task = this.#serverTasks[taskID];
+		var task = this.serverTasks[taskID];
 
 		if (task === undefined)
 			return {
@@ -39,13 +39,13 @@ module.exports = class TaskManager {
 				'result': 'taskID property is of invalid type (required: string)'
 			};
 
-		if (this.#serverTasks[taskID] !== undefined)
+		if (this.serverTasks[taskID] !== undefined)
 			return {
 				'success': false,
 				'result': null
 			};
 
-		this.#serverTasks[taskID] = {
+		this.serverTasks[taskID] = {
 			deadline: deadline,
 			name: name,
 			status: "Work In Progress",
@@ -62,9 +62,9 @@ module.exports = class TaskManager {
 
 		var outArray = {};
 
-		for (const key of Object.keys(this.#serverTasks)) {
-			if (this.#serverTasks[key].members.indexOf(userID) != -1)
-				outArray[key] = this.#serverTasks[key];
+		for (const key of Object.keys(this.serverTasks)) {
+			if (this.serverTasks[key].members.indexOf(userID) != -1)
+				outArray[key] = this.serverTasks[key];
 		}
 
 		return {
@@ -82,13 +82,13 @@ module.exports = class TaskManager {
 				'result': 'taskID property is of invalid type (required: string)'
 			};
 
-		if (this.#serverTasks[taskID] === undefined)
+		if (this.serverTasks[taskID] === undefined)
 			return {
 				'success': false,
 				'result': null
 			};
 
-		this.#serverTasks[taskID].status = status;
+		this.serverTasks[taskID].status = status;
 
 		return {
 			'success': true,
@@ -105,22 +105,22 @@ module.exports = class TaskManager {
 			'result': 'taskID property is of invalid type (required: string)'
 		};
 
-		if (this.#serverTasks[taskID] === undefined)
+		if (this.serverTasks[taskID] === undefined)
 			return {
 				'success': false,
 				'result': null
 			};
 
-		if (this.#serverTasks[taskID].members.indexOf(userID) !== -1)
+		if (this.serverTasks[taskID].members.indexOf(userID) !== -1)
 			return {
 				'success': false,
 				'result': null
 			};
 		
-		this.#serverTasks[taskID].members.push(userID);
+		this.serverTasks[taskID].members.push(userID);
 		return {
 			'success': true,
-			'result': this.#serverTasks[taskID]
+			'result': this.serverTasks[taskID]
 		};
 	}
 
@@ -131,13 +131,13 @@ module.exports = class TaskManager {
 				'result': 'taskID property is of invalid type (required: string)'
 			};
 
-		if (this.#serverTasks[taskID] === undefined)
+		if (this.serverTasks[taskID] === undefined)
 			return {
 				'success': false,
 				'result': null
 			};
 		
-		delete this.#serverTasks[taskID];
+		delete this.serverTasks[taskID];
 
 		return {
 			'success': true,
@@ -147,7 +147,7 @@ module.exports = class TaskManager {
 
 	taskExists(taskID) {
 
-		if (this.#serverTasks[taskID] === undefined) return false;
+		if (this.serverTasks[taskID] === undefined) return false;
 		return true;
 	}
 
@@ -155,9 +155,9 @@ module.exports = class TaskManager {
 
 		return {
 			'success': true,
-			'result': this.#serverTasks
+			'result': this.serverTasks
 		}
 	}
 
-	#serverTasks = {};
+	serverTasks = {};
 }

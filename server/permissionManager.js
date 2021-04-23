@@ -18,7 +18,7 @@ module.exports = class PermissionManager {
     constructor(permissionObject) {
 
         if(permissionObject !== undefined)
-            this.#serverPermissions = permissionObject;
+            this.serverPermissions = permissionObject;
     }
 
 
@@ -33,11 +33,11 @@ module.exports = class PermissionManager {
     */
     getPermissions(userID) {
         
-        var userPermissions = this.#serverPermissions[userID];
+        var userPermissions = this.serverPermissions[userID];
 
         if (userPermissions === undefined) {
             this.setPermission(userID, null);    
-            userPermissions = this.#serverPermissions[userID];
+            userPermissions = this.serverPermissions[userID];
         }
         
         return {
@@ -63,7 +63,7 @@ module.exports = class PermissionManager {
     */
     hasPermissions(userID, permission) {
 
-        var userPermissions = this.#serverPermissions[userID];
+        var userPermissions = this.serverPermissions[userID];
 
         if (userPermissions === undefined) 
             return {
@@ -95,7 +95,7 @@ module.exports = class PermissionManager {
     setPermission(userID, permission) {
 
 
-        var userPermissions = this.#serverPermissions[userID];
+        var userPermissions = this.serverPermissions[userID];
 
         // Default: no permissions
         if(permission === null) {
@@ -113,7 +113,7 @@ module.exports = class PermissionManager {
                 'MANAGE_TEAM': false,
             };
 
-            this.#serverPermissions[userID] = userPermissions;
+            this.serverPermissions[userID] = userPermissions;
 
             return {
                 'success': true,
@@ -128,7 +128,7 @@ module.exports = class PermissionManager {
                 'ADMIN': true,
                 'MANAGE_TEAM': true
             };
-            this.#serverPermissions[userID] = userPermissions;
+            this.serverPermissions[userID] = userPermissions;
 
             return {
                 'success': true,
@@ -138,12 +138,12 @@ module.exports = class PermissionManager {
 
         if (userPermissions === undefined) {
             this.setPermission(userID, null);
-            userPermissions = this.#serverPermissions[userID];
+            userPermissions = this.serverPermissions[userID];
         }
 
         userPermissions[permission] = true;
 
-        this.#serverPermissions[userID] = userPermissions;
+        this.serverPermissions[userID] = userPermissions;
 
         return {
             'success': true,
@@ -167,7 +167,7 @@ module.exports = class PermissionManager {
     */
     revokePermission(userID, permission) {
 
-        var userPermissions = this.#serverPermissions[userID];
+        var userPermissions = this.serverPermissions[userID];
 
         if (userPermissions === undefined) 
             return {
@@ -188,7 +188,7 @@ module.exports = class PermissionManager {
         }
 
         userPermissions[permission] = false;
-        this.#serverPermissions[userID] = userPermissions;
+        this.serverPermissions[userID] = userPermissions;
         
         return {
             'success': true,
@@ -210,11 +210,11 @@ module.exports = class PermissionManager {
 
         return {
             'success': true,
-            'result': this.#serverPermissions
+            'result': this.serverPermissions
         }
     }
 
-    #serverPermissions = {};
+    serverPermissions = {};
 
 
     /* Permissions

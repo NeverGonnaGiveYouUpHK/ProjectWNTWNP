@@ -30,13 +30,24 @@ const teamAPI = require('./api/team');
 const taskAPI = require('./api/task');
 
 const PermissionManager = require('./server/permissionManager');
-const permissionTesInstance = new PermissionManager();
-
 const TeamManager = require('./server/teamManager');
-const teamTesInstance = new TeamManager();
-
 const TaskManager = require('./server/taskManager');
-const taskTesInstance = new TaskManager();
+
+const fs = require('fs');
+
+var Servers = {};
+
+fs.readFile("bot_save.dat", (err, data) => {
+
+	if(err)
+		console.log("data not loaded.")
+
+	try {
+	Servers = JSON.parse(data);
+	}
+	catch(e){}
+	
+});
 
 bot.on('ready', () => {
 	bot.on('message', async (msg) => {
@@ -88,17 +99,18 @@ bot.on('ready', () => {
 				break;
 
 			case 'permission':
-				msg.channel.send(permissionAPI(msg, args, permissionTesInstance));
+				console.log(Servers[msg.guild.id]);
+				msg.channel.send(permissionAPI(msg, args, Servers[msg.guild.id].permission));
 				break;
 
 			case 'team':
 
 				var guild = await bot.guilds.fetch(msg.guild.id);
-				msg.channel.send(teamAPI(msg, args, teamTesInstance, permissionTesInstance, guild));
+				msg.channel.send(teamAPI(msg, args, Servers[msg.guild.id].team,  Servers[msg.guild.id].permission, guild));
 				break;
 
 			case 'task':
-				msg.channel.send(taskAPI(msg, args, taskTesInstance, permissionTesInstance, user));
+				msg.channel.send(taskAPI(msg, args, Servers[msg.guild.id].task,  Servers[msg.guild.id].permission, user));
 			
 			default:
 				break;
@@ -118,5 +130,30 @@ bot.on('ready', () => {
 			global.memeChannels.add(guild.id, channel.id);
 		})
 		.catch(console.error);
+
+		guild.channels.create('bot-commands', { //Create a channel
+			type: 'text', //Make sure the channel is a text channel
+			permissionOverwrites: [{ //Set permission overwrites
+				id: guild.id,
+				allow: ['VIEW_CHANNEL'],
+			}],
+			topic: 'You can send bot commands here. Everyone can mute this.'
+		})
+		.catch(console.error);
+
+		Servers[guild.id] = {
+			'permission': new PermissionManager(),
+			'task': new TaskManager(),
+			'team': new TeamManager()
+		}
+
+		Servers[guild.id].permission.setPermission(guild.ownerID, 'ADMIN');
 	});
 });
+
+setInterval(()=> {
+	fs.writeFile("bot_save.dat", JSON.stringify(Servers), (err) => {
+		if(err)
+			return console.log(err);
+	});
+}, 60 * 1000);

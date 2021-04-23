@@ -49,11 +49,11 @@ module.exports = function(msg, args, permissionHandler) {
 		case 'give':
 		{
 			
-			/*//Check, if user has appropriate permissions
+			//Check, if user has appropriate permissions
 			if (!permissionHandler.hasPermissions(msg.member.id, 'ADMIN').result) return new Discord.MessageEmbed()
 			.setTitle("Error!")
 			.setColor("#FC1010")
-			.addField("Unable to perform this action.", "Higher permissions required!");*/
+			.addField("Unable to perform this action.", "Higher permissions required!");
 
 			//Check if any user has been provided via mentions
 			if (msg.mentions.users.first() === undefined) return new Discord.MessageEmbed()
