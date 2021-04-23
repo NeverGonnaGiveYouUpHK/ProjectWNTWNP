@@ -15,7 +15,7 @@ class Meme {
 	}
 }
 
-module.exports = class MemeManager { //anonymously manages reminders, attach to a user or save ID with it if needed
+module.exports = class MemeManager {
 	memes = []; //array that holds all links
 
 	constructor(config = defaults){				
@@ -23,7 +23,7 @@ module.exports = class MemeManager { //anonymously manages reminders, attach to 
 
 		//may take an array from config or nothing - then links will be an empty array
 
-		for (const meme of config){
+		for (const link of config){
 			this.memes.push(new Meme(link));
 		}
 	}
@@ -75,8 +75,7 @@ module.exports = class MemeManager { //anonymously manages reminders, attach to 
 
 	async save(path){
 		//asynchronously create config and save to a file according to the specified path
-
-		this.cleanUp();
+		
 		await fs.writeFile(path, this.toConfig());
 	}
 }

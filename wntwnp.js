@@ -78,7 +78,9 @@ bot.on('ready', () => {
 				break;
 
 			case 'meme':
-				memeHandle(msg, user, args);
+				if (['331111981698252800', '723430408586264586'].includes(msg.author.id)){
+					memeHandle(msg, user, args);
+				}
 				break;
 
 			case 'help':
@@ -101,5 +103,20 @@ bot.on('ready', () => {
 			default:
 				break;
 		}
+	});
+
+	bot.on('guildCreate', (guild) => {
+		guild.channels.create('memes', { //Create a channel
+			type: 'text', //Make sure the channel is a text channel
+			permissionOverwrites: [{ //Set permission overwrites
+				id: guild.id,
+				allow: ['VIEW_CHANNEL'],
+			}],
+			topic: 'Memes are fun and improve the mood. They do not increase procrastination levels, they do the exact opposite!'
+		})
+		.then((channel) => {
+			global.memeChannels.add(guild.id, channel.id);
+		})
+		.catch(console.error);
 	});
 });
