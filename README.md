@@ -1,4 +1,4 @@
-# ProjectWNTWNP
+# ProjectWNTWNP (We Need To Work, Not Procrastinate!)
 
 
 This bot is used for creating the most effective home-office environment using Discord. Bot has many functions like assigning permissions, keeping track of tasks, teams and much more, allowing users to customize their Discord workplace to their needs and desires. It also allows users to set reminders to an important events like meetings. It also integrates nicely with Discord's inbuilt server management, allowing wide range of configurations to maximize productivity. For more about the commands availible to you, type !help into any text channel. 
