@@ -1,5 +1,14 @@
 const Discord = require('discord.js');
 
+const tokenToName = {
+	Y: 'year',
+	M: 'month',
+	D: 'day',
+	h: 'hours',
+	m: 'minutes',
+	s: 'seconds'
+};
+
 module.exports = async function reminderHandle(msg, user, args){
 	const subcommand = args.shift();
 
@@ -17,11 +26,10 @@ module.exports = async function reminderHandle(msg, user, args){
 			break;
 
 		case 'set':
-			console.log(args.join(' '));
 			const inputString = args.join(' ').replace(/\\/g, '');
-			console.log(inputString);
+			let tokens;
 			try {
-				user.dateFormat.set(inputString)
+				tokens = user.dateFormat.set(inputString);
 			} catch (error){
 				return msg.channel.send(
 					new Discord.MessageEmbed()
@@ -31,10 +39,14 @@ module.exports = async function reminderHandle(msg, user, args){
 			}
 
 			await user.dateFormat.save(`./config/data/dateformat/${user.id}.json`);
-				
+			
+			for (var i = 0; i < tokens.length; i++){
+				tokens[i] = tokenToName[tokens[i]];
+			}
+
 			msg.channel.send(
 				new Discord.MessageEmbed()
-				.addField('Success', `Your date format was set to ${user.dateFormat.displayString}.`)
+				.addField('Success', `Your date format was set to ${user.dateFormat.displayString}.\nRecognizing ${tokens.join(', ')}.`)
 				.setColor('#fcac34')
 			);
 

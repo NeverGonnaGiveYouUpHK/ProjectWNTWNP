@@ -64,7 +64,7 @@ module.exports = async function reminderHandle(msg, user, args){
 			);
 
 			try {
-				user.reminders.remove(args);
+				user.reminders.remove(removeIndex);
 			} catch (error){
 				return msg.channel.send(
 					new Discord.MessageEmbed()

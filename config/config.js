@@ -2,9 +2,10 @@ const fs = require('fs/promises');
 
 const ReminderManager = require('../server/reminder');
 const DateFormatManager = require('../server/dateFormat');
+const MemeManager = require('../server/meme');
 
 module.exports.User = class User {
-	id = "";
+	id = '';
 	reminders;
 	dateFormat = null;
 	
@@ -32,5 +33,16 @@ module.exports.User = class User {
 		} catch (error){
 			this.dateFormat = new DateFormatManager();
 		}
+	}
+}
+
+module.exports.meme = function (){
+	try {
+		const config = await fs.readFile(`./config/data/memes.json`);
+		const configParsed = JSON.parse(config);
+
+		return new MemeManager(configParsed);
+	} catch (error){
+		return new MemeManager();
 	}
 }

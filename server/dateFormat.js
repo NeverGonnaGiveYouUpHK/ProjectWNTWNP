@@ -51,6 +51,8 @@ module.exports = class DateFormatManager {
 		this.displayString = inputString;
 		this.formatString = result;
 		this.items = items;
+
+		return items;
 	}
 
 	parse(inputString){
