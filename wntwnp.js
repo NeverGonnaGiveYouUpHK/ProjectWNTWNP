@@ -84,7 +84,7 @@ bot.on('ready', () => {
 				break;
 
 			case 'help':
-				msg.channel.send(help());
+				msg.channel.send(help(args));
 				break;
 
 			case 'permission':

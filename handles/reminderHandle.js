@@ -38,7 +38,7 @@ module.exports = async function reminderHandle(msg, user, args){
 			const when = user.dateFormat.parse(date);
 			if (Number.isNaN(when)) return msg.channel.send(
 				new Discord.MessageEmbed()
-				.addField('Wrong input error', 'Unable to parse date. Even though the bot will understand some date formats, it doesn\'t recognize all. If no format works for you, the UTC and ISO formats will work always. You may also specify your own using !dateformat command. For help, see !dateformat help.')
+				.addField('Wrong input error', 'Unable to parse date. Even though the bot will understand some date formats, it doesn\'t recognize all. If no format works for you, the UTC and ISO formats will work as defaults. You may also specify your own using !dateformat command. For help, see !help dateformat.')
 				.setColor('#fc1010')
 			);
 
