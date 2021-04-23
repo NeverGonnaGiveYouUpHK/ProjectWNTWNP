@@ -93,7 +93,7 @@ module.exports = function(msg, args, teamHandler, permissionHandler) {
             .setColor("#FC1010")
             .addField("Unable to perform this action.", "User has already permissions set!");
 
-            var team = teamHandler.getTeam(args[1]);
+            var team = teamHandler.getTeam(args[0]);
 
             if (!team.success) return new Discord.MessageEmbed()
             .setTitle("Error!")
@@ -107,21 +107,22 @@ module.exports = function(msg, args, teamHandler, permissionHandler) {
             return new Discord.MessageEmbed()
             .setTitle("SettingSuccess!");
 
-        /*case 'kick':
+        case 'kick':
             if (handler.hasPermissions(callerID, 'ADMIN')) return new Discord.MessageEmbed()
             .setTitle("Error!")
             .setColor("#FC1010")
             .addField("Unable to perform this action.", "Higher permissions required!");
 
-            var result = handler.revokePermission(userID, permission);
+            var result = handler.kickFromTeam(args[0], msg.mentions.users.first());
+            //Remove from role
 
             if (!result.success)return new Discord.MessageEmbed()
             .setTitle("Error!")
             .setColor("#FC1010")
-            .addField("Unable to perform this action.", "User has no permissions set!");
+            .addField("Unable to perform this action.", "Invalid id provided or user isn't part of the team!");
 
         return new Discord.MessageEmbed()
-        .setTitle("SettingSuccess!");*/
+        .setTitle("SettingSuccess!");
     }
 
 
