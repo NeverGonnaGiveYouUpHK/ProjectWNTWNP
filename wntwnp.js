@@ -20,6 +20,7 @@ const prefix = "!";
 const reminderHandle = require('./handles/reminderHandle');
 const timezoneHandle = require('./handles/timezoneHandle');
 const dateformatHandle = require('./handles/dateformatHandle');
+const memeHandle = require('./handles/memeHandle');
 
 require('./server/reminderScheduler')();
 
@@ -74,6 +75,10 @@ bot.on('ready', () => {
 
 			case 'dateformat':
 				dateformatHandle(msg, user, args);
+				break;
+
+			case 'meme':
+				memeHandle(msg, user, args);
 				break;
 
 			case 'help':
